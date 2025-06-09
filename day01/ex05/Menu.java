@@ -7,7 +7,7 @@ public class Menu {
 
     TransactionsService transactionsService = new TransactionsService(null);
 
-    private static void printErr(String msg)
+    public static void printErr(String msg)
     {
         System.err.println(msg);
     }
@@ -23,9 +23,12 @@ public class Menu {
         if (type.equals("dev")){
             System.out.println("5. DEV - remove a transfer by ID");
             System.out.println("6. DEV - check transfer validity");
+            System.out.println("7. Finish execution");
         }
+        else
+            System.out.println("5. Finish execution");
 
-        System.out.println("7. Finish execution");
+        
 
     }
 
@@ -33,7 +36,7 @@ public class Menu {
 
 
 
-    private  void addUser() {
+    public  void addUser() {
         
         System.out.println("Enter a user name and a balance");
         System.out.print("->");
@@ -73,12 +76,40 @@ public class Menu {
         }
     }
 
-    private static void viewUserBalances() {
-        System.out.println("Function: viewUserBalances() - Displaying user balances...");
-        // TODO: Implement balance display logic
+    public void viewUserBalances() {
+
+        System.out.println("Enter a user ID");
+        System.out.print("->");
+
+        Scanner sc = new Scanner(System.in);
+        boolean running = true;
+        while (running){
+            if (sc.hasNext()){
+
+                String line = sc.nextLine();
+
+                Scanner scanner = new Scanner(line);
+
+                if (!scanner.hasNextInt()){
+                    printErr("Invalid Input: id must be integer");
+                    continue;
+                }
+                
+
+                int userId = scanner.nextInt();
+                
+                scanner.close();
+                sc.close();
+                System.out.printf("%s - %d\n",
+                        transactionsService.getUserById(userId),
+                        transactionsService.getUserBalanceById(userId));
+            }
+            running = false;
+        }
+
     }
 
-    private void performTransfer() {
+    public void performTransfer() {
 
         System.out.println("Enter a sender ID, a recipient ID, and a transfer amount");
         System.out.print("->");
@@ -123,7 +154,7 @@ public class Menu {
         }
     }
 
-    private void viewUserTransactions() {
+    public void viewUserTransactions() {
         System.out.println("Enter a user ID");
         System.out.print("-> ");
         Scanner sc = new Scanner(System.in);
@@ -175,7 +206,7 @@ public class Menu {
         
     }
 
-    private void removeTransferById() {
+    public void removeTransferById() {
         System.out.println("Enter a user ID and a transfer ID");
         System.out.print("-> ");
 
@@ -210,9 +241,40 @@ public class Menu {
         }
     }
 
-    private static void checkTransferValidity() {
-        System.out.println("Function: checkTransferValidity() - Checking transfer validity...");
-        // TODO: Implement transfer validation logic
+    public void checkTransferValidity() {
+
+        System.out.println("Check results:");
+
+
+        Transaction[] transactions = transactionsService.checkValidTransactions();
+
+        for (Transaction transaction : transactions){
+
+            if (transaction.getCategory() == 'C')
+            {
+                System.out.printf(
+                    "%s (id = %d) has an unacknowledged transfer id = %s from %s (id = %d) for %d%n",
+                    transaction.getRecipient().getName(),
+                    transaction.getRecipient().getIdentifier(), 
+                    transaction.getId(),
+                    transaction.getSender().getName(),
+                    transaction.getSender().getIdentifier(),
+                    transaction.getAmount()
+                );
+            }
+            else
+            {
+                System.out.printf(
+                    "%s (id = %d) has an unacknowledged transfer id = %s to %s (id = %d) for %d%n",
+                    transaction.getSender().getName(),
+                    transaction.getSender().getIdentifier(),
+                    transaction.getId(),
+                    transaction.getRecipient().getName(),
+                    transaction.getRecipient().getIdentifier(), 
+                    transaction.getAmount()
+                );
+            }
+        }
     }
     
 }

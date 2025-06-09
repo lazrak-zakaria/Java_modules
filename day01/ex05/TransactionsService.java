@@ -100,4 +100,7 @@ public class TransactionsService {
         return transactionsList.toArray();
     }
 
+    public User getUserById(Integer id){
+        return usersList.getUserById(id);
+    }   
 }
