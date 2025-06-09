@@ -13,7 +13,7 @@ public class Transaction
     
 
 
-    public Transaction(User recipient, User sender, Character category, Integer amount ){
+    public Transaction( User sender, User recipient, Character category, Integer amount , UUID id){
 
         boolean is_valid = true;
 
@@ -43,9 +43,7 @@ public class Transaction
         this.category = category;
         this.recipient = recipient;
         this.amount = amount;
-
-        this.id = UUID.randomUUID();
-
+        this.id = id;
     }
 
 
