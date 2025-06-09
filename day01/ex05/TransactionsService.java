@@ -26,12 +26,12 @@ public class TransactionsService {
 
     }
 
+
     public void transferTransaction(Integer senderId, Integer recipientId, Integer amount){
 
         User sender = usersList.getUserById(senderId);
         User recipient = usersList.getUserById(recipientId);
 
-        
         if (sender.getBalance() > amount)
             throw new IllegalTransactionException("The amount exceeding user’s residual balance");
 
@@ -51,7 +51,8 @@ public class TransactionsService {
 
     }
 
-    public Transaction[] geTransactionsByUser(User user){
+    public Transaction[] getTransactionsByUser(Integer id){
+        User user = usersList.getUserById(id);
         return user.getTransactionsList().toArray();
     }
 
